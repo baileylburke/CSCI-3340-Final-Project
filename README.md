@@ -5,9 +5,7 @@ around teams, with generated summaries of decisions, a project timeline, and a
 completion estimate derived from what is being discussed.
 
 ## Team Members
-Bailey Burke
-Jason Lopez
-Alfred Zavala
+Bailey Burke | Jason Lopez | Alfred Zavala
 
 ## First-time setup
 
