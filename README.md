@@ -4,6 +4,11 @@ Project-centred group communication. Chat organised around projects rather than
 around teams, with generated summaries of decisions, a project timeline, and a
 completion estimate derived from what is being discussed.
 
+## Team Members
+Bailey Burke
+Jason Lopez
+Alfred Zavala
+
 ## First-time setup
 
 ```bash
