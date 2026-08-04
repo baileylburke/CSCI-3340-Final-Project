@@ -19,18 +19,16 @@ pip install -r requirements.txt
 cp .env.example .env            # then edit .env
 ```
 
-The first person to set up must generate the initial migration, because the
-custom user model has no migration file yet:
+Settings load .env from the project root. Variables already set in your real
+environment take precedence over the file.
+
+Then build the database and start the server:
 
 ```bash
-python manage.py makemigrations accounts
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
-
-Commit and push the generated apps/accounts/migrations/0001_initial.py.
-Everyone after that only runs migrate.
 
 Open http://127.0.0.1:8000/ — you should see "Project is running."
 
