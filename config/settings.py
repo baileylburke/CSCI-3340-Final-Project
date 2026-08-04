@@ -2,7 +2,14 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Reads BASE_DIR/.env into the environment. Variables already set in the
+# real environment win, so a deployment never has its config overwritten
+# by a stray local file.
+load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-change-me")
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"

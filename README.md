@@ -19,6 +19,9 @@ pip install -r requirements.txt
 cp .env.example .env            # then edit .env
 ```
 
+Settings load .env from the project root. Variables already set in your real
+environment take precedence over the file.
+
 Then build the database and start the server:
 
 ```bash
