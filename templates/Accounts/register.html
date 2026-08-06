@@ -120,7 +120,11 @@
         <input type="password" name="confirm_password" required>
 
         <button type="submit">Create Account</button>
-
+          {% if error %}
+          <p style="color:#ff8080; text-align:center; margin-bottom:20px;">
+    {{ error }}
+          </p>
+          {% endif %}
     </form>
 
     <div class="bottom">
