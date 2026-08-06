@@ -1,14 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Project-Centred Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectConnect</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:linear-gradient(135deg,#0f172a,#1e3a8a);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:white;
+        }
+
+        .container{
+            width:90%;
+            max-width:1100px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:80px;
+        }
+
+        .left{
+            flex:1;
+        }
+
+        .left h1{
+            font-size:58px;
+            margin-bottom:20px;
+        }
+
+        .left p{
+            font-size:20px;
+            color:#d1d5db;
+            line-height:1.6;
+            margin-bottom:35px;
+        }
+
+        .buttons{
+            display:flex;
+            gap:20px;
+        }
+
+        .btn{
+            text-decoration:none;
+            padding:15px 35px;
+            border-radius:10px;
+            font-size:18px;
+            font-weight:bold;
+            transition:.3s;
+        }
+
+        .login{
+            background:white;
+            color:#1e3a8a;
+        }
+
+        .signup{
+            border:2px solid white;
+            color:white;
+        }
+
+        .btn:hover{
+            transform:translateY(-4px);
+        }
+
+        .card{
+            width:420px;
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(12px);
+            border-radius:20px;
+            padding:35px;
+            box-shadow:0 20px 40px rgba(0,0,0,.3);
+        }
+
+        .card h2{
+            margin-bottom:20px;
+        }
+
+        .feature{
+            margin:20px 0;
+            font-size:18px;
+        }
+
+        .feature span{
+            color:#38bdf8;
+            font-weight:bold;
+            margin-right:10px;
+        }
+
+        @media(max-width:900px){
+            .container{
+                flex-direction:column;
+                text-align:center;
+            }
+
+            .buttons{
+                justify-content:center;
+            }
+
+            .card{
+                width:100%;
+            }
+        }
+    </style>
+
 </head>
+
 <body>
-    <h1>Welcome to Project-Centred Chat</h1>
 
-    <p>Please log in or create an account to continue.</p>
+<div class="container">
 
-    <button>Log In</button>
-    <button>Create Account</button>
+    <div class="left">
+
+        <h1>ProjectConnect</h1>
+
+        <p>
+            Collaborate with your team, organize projects,
+            share updates, and keep everyone on the same page
+            from one simple workspace.
+        </p>
+
+        <div class="buttons">
+            <a href="/login/" class="btn login">Log In</a>
+            <a href="/register/" class="btn signup">Create Account</a>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Features</h2>
+
+        <div class="feature"><span>✓</span>Team Chat Rooms</div>
+        <div class="feature"><span>✓</span>Project Timelines</div>
+        <div class="feature"><span>✓</span>Task Management</div>
+        <div class="feature"><span>✓</span>Meeting Scheduling</div>
+        <div class="feature"><span>✓</span>AI Project Summaries</div>
+
+    </div>
+
+</div>
+
 </body>
 </html>

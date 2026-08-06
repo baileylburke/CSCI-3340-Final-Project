@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | ProjectConnect</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#0f172a,#1e3a8a);
+            padding:40px;
+        }
+
+        .card{
+            width:450px;
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(12px);
+            border-radius:20px;
+            padding:40px;
+            color:white;
+            box-shadow:0 20px 40px rgba(0,0,0,.3);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:10px;
+        }
+
+        p{
+            text-align:center;
+            color:#d1d5db;
+            margin-bottom:30px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:bold;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            margin-bottom:18px;
+            font-size:15px;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            background:white;
+            color:#1e3a8a;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:.3s;
+            margin-top:10px;
+        }
+
+        button:hover{
+            transform:translateY(-2px);
+        }
+
+        .bottom{
+            text-align:center;
+            margin-top:25px;
+        }
+
+        a{
+            color:#7dd3fc;
+            text-decoration:none;
+        }
+
+        a:hover{
+            text-decoration:underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>Create Account</h1>
+
+    <p>Join ProjectConnect and start collaborating.</p>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>Display Name</label>
+        <input type="text" name="display_name" required>
+
+        <label>Username</label>
+        <input type="text" name="username" required>
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" required>
+
+        <button type="submit">Create Account</button>
+
+    </form>
+
+    <div class="bottom">
+        Already have an account?
+        <a href="/login/">Log In</a>
+    </div>
+
+</div>
+
+</body>
+</html>

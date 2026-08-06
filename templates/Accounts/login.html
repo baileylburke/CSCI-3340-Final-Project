@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | ProjectConnect</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#0f172a,#1e3a8a);
+        }
+
+        .card{
+            width:400px;
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(12px);
+            border-radius:20px;
+            padding:40px;
+            color:white;
+            box-shadow:0 20px 40px rgba(0,0,0,.3);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:10px;
+        }
+
+        p{
+            text-align:center;
+            color:#d1d5db;
+            margin-bottom:30px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:bold;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            margin-bottom:20px;
+            font-size:15px;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            background:white;
+            color:#1e3a8a;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        button:hover{
+            transform:translateY(-2px);
+        }
+
+        .bottom{
+            text-align:center;
+            margin-top:25px;
+        }
+
+        a{
+            color:#7dd3fc;
+            text-decoration:none;
+        }
+
+        a:hover{
+            text-decoration:underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>Welcome Back</h1>
+
+    <p>Log in to your ProjectConnect account.</p>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>Username</label>
+        <input type="text" name="username" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">Log In</button>
+
+    </form>
+
+    <div class="bottom">
+        Don't have an account?
+        <a href="/register/">Create Account</a>
+    </div>
+
+</div>
+
+</body>
+</html>
