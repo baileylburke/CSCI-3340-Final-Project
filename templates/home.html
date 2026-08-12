@@ -3,171 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProjectConnect</title>
+
+    <title>Project-Teams</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, Helvetica, sans-serif;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        body{
-            background:linear-gradient(135deg,#0f172a,#1e3a8a);
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            color:white;
+        body {
+            background: white;
+            color: #333;
+            min-height: 100vh;
         }
 
-        .container{
-            width:90%;
-            max-width:1100px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:80px;
+        /* =========================
+           TOP NAVIGATION
+        ========================= */
+
+        .navbar {
+            width: 100%;
+            height: 75px;
+            background: #4DBFFF;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
         }
 
-        .left{
-            flex:1;
+        .search-container {
+            position: relative;
+            width: 500px;
+            max-width: 60%;
         }
 
-        .left h1{
-            font-size:58px;
-            margin-bottom:20px;
+        .search-container input {
+            width: 100%;
+            height: 42px;
+            border: none;
+            border-radius: 22px;
+            background: white;
+            padding: 0 50px 0 20px;
+            font-size: 16px;
+            outline: none;
         }
 
-        .left p{
-            font-size:20px;
-            color:#d1d5db;
-            line-height:1.6;
-            margin-bottom:35px;
+        .search-container i {
+            position: absolute;
+            right: 18px;
+            top: 13px;
+            color: #555;
+            font-size: 17px;
         }
 
-        .buttons{
-            display:flex;
-            gap:20px;
+        .profile {
+            margin-left: auto;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4DBFFF;
+            font-size: 22px;
+            cursor: pointer;
         }
 
-        .btn{
-            text-decoration:none;
-            padding:15px 35px;
-            border-radius:10px;
-            font-size:18px;
-            font-weight:bold;
-            transition:.3s;
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
         }
 
-        .login{
-            background:white;
-            color:#1e3a8a;
+        /* =========================
+           THREE PERSON LOGO
+        ========================= */
+
+        .logo {
+            margin-top: 45px;
+            margin-bottom: 20px;
+            color: #4DBFFF;
+            font-size: 60px;
         }
 
-        .signup{
-            border:2px solid white;
-            color:white;
+        .logo i {
+            margin: 0 -8px;
         }
 
-        .btn:hover{
-            transform:translateY(-4px);
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            margin-top: 20px;
         }
 
-        .card{
-            width:420px;
-            background:rgba(255,255,255,.08);
-            backdrop-filter:blur(12px);
-            border-radius:20px;
-            padding:35px;
-            box-shadow:0 20px 40px rgba(0,0,0,.3);
+        .hero h1 {
+            font-size: 52px;
+            color: #4DBFFF;
+            margin-bottom: 25px;
+            font-weight: 700;
         }
 
-        .card h2{
-            margin-bottom:20px;
+        .hero p {
+            max-width: 750px;
+            margin: 0 auto;
+            font-size: 20px;
+            line-height: 1.7;
+            color: #555;
         }
 
-        .feature{
-            margin:20px 0;
-            font-size:18px;
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .buttons {
+            margin-top: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .feature span{
-            color:#38bdf8;
-            font-weight:bold;
-            margin-right:10px;
+        .btn {
+            text-decoration: none;
+            padding: 14px 38px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.25s;
+            display: inline-block;
         }
 
-        @media(max-width:900px){
-            .container{
-                flex-direction:column;
-                text-align:center;
+        .join-btn {
+            background: #4DBFFF;
+            color: white;
+        }
+
+        .login-btn {
+            background: white;
+            color: #4DBFFF;
+            border: 2px solid #4DBFFF;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+        }
+
+        /* =========================
+           LEARN MORE
+        ========================= */
+
+        .learn-more {
+            margin-top: 55px;
+        }
+
+        .learn-more a {
+            text-decoration: none;
+            color: #4DBFFF;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .learn-more a:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================
+           ABOUT US
+        ========================= */
+
+        .about {
+            margin-top: 100px;
+            padding-bottom: 80px;
+        }
+
+        .about h2 {
+            color: #4DBFFF;
+            font-size: 44px;
+            margin-bottom: 25px;
+        }
+
+        .about p {
+            max-width: 800px;
+            margin: 0 auto;
+            color: #555;
+            font-size: 19px;
+            line-height: 1.8;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 0 20px;
             }
 
-            .buttons{
-                justify-content:center;
+            .search-container {
+                width: 100%;
+                max-width: none;
             }
 
-            .card{
-                width:100%;
+            .logo {
+                font-size: 50px;
             }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 220px;
+            }
+
+            .about h2 {
+                font-size: 36px;
+            }
+
         }
+
     </style>
-
 </head>
 
 <body>
 
-<div class="container">
+    <!-- TOP NAVIGATION -->
 
-    <div class="left">
+    <nav class="navbar">
 
-        <h1>ProjectConnect</h1>
+        <div class="search-container">
 
-        <p>
-            Collaborate with your team, organize projects,
-            share updates, and keep everyone on the same page
-            from one simple workspace.
-        </p>
+            <input
+                type="text"
+                placeholder="Search Project-Teams..."
+            >
 
-        <div class="buttons">
-            {% if user.is_authenticated %}
+            <i class="fa-solid fa-magnifying-glass"></i>
 
-    <h2>Welcome, {{ user.username }}!</h2>
-
-    <a href="/logout/" class="btn signup">
-        Logout
-    </a>
-
-    {% else %}
-
-    <a href="/login/" class="btn login">
-        Log In
-    </a>
-
-    <a href="/register/" class="btn signup">
-        Create Account
-    </a>
-
-    {% endif %}  
         </div>
 
-    </div>
+        <div class="profile">
+            <i class="fa-solid fa-user"></i>
+        </div>
 
-    <div class="card">
+    </nav>
 
-        <h2>Features</h2>
 
-        <div class="feature"><span>✓</span>Team Chat Rooms</div>
-        <div class="feature"><span>✓</span>Project Timelines</div>
-        <div class="feature"><span>✓</span>Task Management</div>
-        <div class="feature"><span>✓</span>Meeting Scheduling</div>
-        <div class="feature"><span>✓</span>AI Project Summaries</div>
+    <!-- MAIN PAGE -->
 
-    </div>
+    <main class="main">
 
-</div>
+        <!-- THREE PERSON LOGO -->
+
+        <div class="logo">
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user"></i>
+        </div>
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <h1>Project-Teams</h1>
+
+            <p>
+                Project Teams helps you organize your work and contact
+                your work, call chat, and organize your files securely.
+            </p>
+
+
+            <!-- LOGIN / JOIN BUTTONS -->
+
+            <div class="buttons">
+
+                {% if user.is_authenticated %}
+
+                    <a href="/logout/" class="btn join-btn">
+                        Logout
+                    </a>
+
+                    <a href="/" class="btn login-btn">
+                        Home
+                    </a>
+
+                {% else %}
+
+                    <a href="/register/" class="btn join-btn">
+                        Join Now
+                    </a>
+
+                    <a href="/login/" class="btn login-btn">
+                        Login
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- LEARN MORE -->
+
+            <div class="learn-more">
+
+                <a href="#about">
+                    Learn More
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- ABOUT US -->
+
+        <section class="about" id="about">
+
+            <h2>About Us</h2>
+
+            <p>
+                Project Teams is a software that will help you organize
+                your work. We include many features to make your work
+                more easy to organize and to find, and we also make it
+                easier for you and your team to contact eachother.
+            </p>
+
+        </section>
+
+    </main>
 
 </body>
 </html>
+```

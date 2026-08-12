@@ -1,123 +1,421 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | ProjectConnect</title>
+
+    <title>Login | Project-Teams</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, Helvetica, sans-serif;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        body{
-            height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:linear-gradient(135deg,#0f172a,#1e3a8a);
+        body {
+            background: white;
+            color: #333;
+            min-height: 100vh;
         }
 
-        .card{
-            width:400px;
-            background:rgba(255,255,255,.08);
-            backdrop-filter:blur(12px);
-            border-radius:20px;
-            padding:40px;
-            color:white;
-            box-shadow:0 20px 40px rgba(0,0,0,.3);
+        /* =========================
+           TOP NAVIGATION
+        ========================= */
+
+        .navbar {
+            width: 100%;
+            height: 75px;
+            background: #4DBFFF;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
         }
 
-        h1{
-            text-align:center;
-            margin-bottom:10px;
+        .search-container {
+            position: relative;
+            width: 500px;
+            max-width: 60%;
         }
 
-        p{
-            text-align:center;
-            color:#d1d5db;
-            margin-bottom:30px;
+        .search-container input {
+            width: 100%;
+            height: 42px;
+            border: none;
+            border-radius: 22px;
+            background: white;
+            padding: 0 50px 0 20px;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 0;
         }
 
-        label{
-            display:block;
-            margin-bottom:8px;
-            font-weight:bold;
+        .search-container i {
+            position: absolute;
+            right: 18px;
+            top: 13px;
+            color: #555;
+            font-size: 17px;
         }
 
-        input{
-            width:100%;
-            padding:14px;
-            border:none;
-            border-radius:10px;
-            margin-bottom:20px;
-            font-size:15px;
+        .profile {
+            margin-left: auto;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4DBFFF;
+            font-size: 22px;
         }
 
-        button{
-            width:100%;
-            padding:14px;
-            border:none;
-            border-radius:10px;
-            background:white;
-            color:#1e3a8a;
-            font-size:16px;
-            font-weight:bold;
-            cursor:pointer;
-            transition:.3s;
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 55px 20px 70px;
         }
 
-        button:hover{
-            transform:translateY(-2px);
+        /* =========================
+           LOGO
+        ========================= */
+
+        .logo {
+            color: #4DBFFF;
+            font-size: 48px;
+            margin-bottom: 12px;
         }
 
-        .bottom{
-            text-align:center;
-            margin-top:25px;
+        .logo i {
+            margin: 0 -7px;
         }
 
-        a{
-            color:#7dd3fc;
-            text-decoration:none;
+        /* =========================
+           TITLE
+        ========================= */
+
+        .page-title {
+            color: #4DBFFF;
+            font-size: 38px;
+            margin-bottom: 8px;
+            text-align: center;
         }
 
-        a:hover{
-            text-decoration:underline;
+        .subtitle {
+            color: #666;
+            font-size: 17px;
+            text-align: center;
+            margin-bottom: 30px;
         }
+
+        /* =========================
+           LOGIN CARD
+        ========================= */
+
+        .card {
+            width: 420px;
+            max-width: 100%;
+            background: white;
+            border: 2px solid #e5f5ff;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(77, 191, 255, 0.15);
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        form {
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 14px;
+            color: #4DBFFF;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 13px 14px 13px 43px;
+            border: 1px solid #d8d8d8;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+            margin-bottom: 0;
+        }
+
+        .input-group input:focus {
+            border-color: #4DBFFF;
+            box-shadow: 0 0 0 3px rgba(77, 191, 255, 0.15);
+        }
+
+        /* =========================
+           LOGIN BUTTON
+        ========================= */
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #4DBFFF;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.25s;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #28AFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(77, 191, 255, 0.25);
+        }
+
+        /* =========================
+           ERROR MESSAGE
+        ========================= */
+
+        .error {
+            color: #e74c3c;
+            background: #fff1f0;
+            border: 1px solid #ffc9c5;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* =========================
+           CREATE ACCOUNT LINK
+        ========================= */
+
+        .bottom {
+            text-align: center;
+            margin-top: 24px;
+            color: #666;
+            font-size: 15px;
+        }
+
+        .bottom a {
+            color: #4DBFFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .search-container {
+                max-width: 75%;
+            }
+
+            .page {
+                padding-top: 35px;
+            }
+
+            .page-title {
+                font-size: 32px;
+            }
+
+            .card {
+                padding: 28px 22px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<div class="card">
 
-    <h1>Welcome Back</h1>
+    <!-- =========================
+         TOP NAVIGATION
+    ========================= -->
 
-    <p>Log in to your ProjectConnect account.</p>
+    <nav class="navbar">
 
-    <form method="POST">
+        <div class="search-container">
 
-        {% csrf_token %}
+            <input
+                type="text"
+                placeholder="Search Project-Teams..."
+            >
 
-        <label>Username</label>
-        <input type="text" name="username" required>
+            <i class="fa-solid fa-magnifying-glass"></i>
 
-        <label>Password</label>
-        <input type="password" name="password" required>
+        </div>
 
-        <button type="submit">Log In</button>
 
-    </form>
+        <div class="profile">
 
-    <div class="bottom">
-        Don't have an account?
-        <a href="/register/">Create Account</a>
-    </div>
+            <i class="fa-solid fa-user"></i>
 
-</div>
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         LOGIN PAGE
+    ========================= -->
+
+    <main class="page">
+
+
+        <!-- Three Person Logo -->
+
+        <div class="logo">
+
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user"></i>
+
+        </div>
+
+
+        <!-- Title -->
+
+        <h1 class="page-title">
+            Welcome Back
+        </h1>
+
+        <p class="subtitle">
+            Log in to your Project-Teams account.
+        </p>
+
+
+        <!-- Login Card -->
+
+        <div class="card">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                {% if error %}
+
+                    <div class="error">
+                        {{ error }}
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Username -->
+
+                <label>
+                    Username
+                </label>
+
+                <div class="input-group">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Enter your username"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Password -->
+
+                <label>
+                    Password
+                </label>
+
+                <div class="input-group">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Login -->
+
+                <button type="submit">
+                    Log In
+                </button>
+
+            </form>
+
+
+            <!-- Create Account -->
+
+            <div class="bottom">
+
+                Don't have an account?
+
+                <a href="/register/">
+                    Create Account
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
 
 </body>
 </html>
+```
