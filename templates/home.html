@@ -20,6 +20,7 @@
             justify-content:center;
             align-items:center;
             color:white;
+            padding: 40px 0;
         }
 
         .container{
@@ -75,46 +76,169 @@
             transform:translateY(-4px);
         }
 
+        /* Dashboard Wrapper holding both Chat and Calendar */
+        .dashboard-widgets {
+            width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
         .card{
-            width:420px;
+            width: 100%;
             background:rgba(255,255,255,.08);
             backdrop-filter:blur(12px);
             border-radius:20px;
-            padding:35px;
+            padding:25px;
             box-shadow:0 20px 40px rgba(0,0,0,.3);
         }
 
         .card h2{
-            margin-bottom:20px;
+            margin-bottom:15px;
+            font-size: 20px;
         }
 
-        .feature{
-            margin:20px 0;
-            font-size:18px;
+        /* --- Chat Component UI --- */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 240px;
         }
 
-        .feature span{
-            color:#38bdf8;
-            font-weight:bold;
-            margin-right:10px;
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
         }
 
+        /* Custom scrollbar for chat history */
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .msg {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            max-width: 85%;
+            line-height: 1.4;
+        }
+
+        .msg.received {
+            background: rgba(255, 255, 255, 0.12);
+            align-self: flex-start;
+        }
+
+        .msg.received span {
+            color: #38bdf8;
+            font-weight: bold;
+            display: block;
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+
+        .msg.sent {
+            background: #1e3a8a;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            align-self: flex-end;
+        }
+
+        .chat-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-bar input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-bar input::placeholder {
+            color: #94a3b8;
+        }
+
+        .chat-bar button {
+            background: white;
+            color: #0f172a;
+            border: none;
+            padding: 0 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .chat-bar button:hover {
+            background: #e2e8f0;
+        }
+
+        /* --- Calendar Component UI --- */
+        .cal-days, .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .cal-days {
+            color: #38bdf8;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .cal-grid div {
+            padding: 8px 0;
+            border-radius: 6px;
+        }
+
+        .cal-grid .pad {
+            opacity: 0.2;
+        }
+
+        .cal-grid .today {
+            background: white;
+            color: #0f172a;
+            font-weight: bold;
+        }
+
+        .cal-grid .event {
+            border: 1px solid #38bdf8;
+            position: relative;
+        }
+
+        /* --- Media Queries --- */
         @media(max-width:900px){
             .container{
                 flex-direction:column;
                 text-align:center;
+                gap: 40px;
             }
 
             .buttons{
                 justify-content:center;
             }
 
-            .card{
+            .dashboard-widgets{
                 width:100%;
             }
         }
     </style>
-
 </head>
 
 <body>
@@ -122,9 +246,7 @@
 <div class="container">
 
     <div class="left">
-
         <h1>ProjectConnect</h1>
-
         <p>
             Collaborate with your team, organize projects,
             share updates, and keep everyone on the same page
@@ -133,41 +255,88 @@
 
         <div class="buttons">
             {% if user.is_authenticated %}
+                <h2>Welcome, {{ user.username }}!</h2>
+                <a href="/logout/" class="btn signup">Logout</a>
+            {% else %}
+                <a href="/login/" class="btn login">Log In</a>
+                <a href="/register/" class="btn signup">Create Account</a>
+            {% endif %}  
+        </div>
+    </div>
 
-    <h2>Welcome, {{ user.username }}!</h2>
+    <!-- Right Side Dashboard Wrapper Section -->
+    <div class="dashboard-widgets">
 
-    <a href="/logout/" class="btn signup">
-        Logout
-    </a>
+        <!-- Chat Widget -->
+        <div class="card">
+            <h2>Team Chat</h2>
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="msg received">
+                        <span>Alex M.</span>
+                        Hey team! Did everyone see the updated product roadmap specifications?
+                    </div>
+                    <div class="msg sent">
+                        Yep, looks solid. Calendar sync is good to go.
+                    </div>
+                </div>
+                <div class="chat-bar">
+                    <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
+                    <button id="sendBtn">Send</button>
+                </div>
+            </div>
+        </div>
 
-    {% else %}
-
-    <a href="/login/" class="btn login">
-        Log In
-    </a>
-
-    <a href="/register/" class="btn signup">
-        Create Account
-    </a>
-
-    {% endif %}  
+        <!-- Calendar Widget -->
+        <div class="card">
+            <h2>August 2026</h2>
+            <div class="cal-days">
+                <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+            </div>
+            <div class="cal-grid">
+                <!-- Padding days for previous month -->
+                <div class="pad">26</div><div class="pad">27</div><div class="pad">28</div><div class="pad">29</div><div class="pad">30</div><div class="pad">31</div>
+                <!-- Current month days -->
+                <div>1</div><div class="event">2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div>
+                <div>8</div><div>9</div><div>10</div><div>11</div><div class="today">12</div><div>13</div><div>14</div>
+                <div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div>
+                <div>22</div><div>23</div><div>24</div><div>25</div><div>26</div><div>27</div><div>28</div>
+                <div>29</div><div>30</div><div>31</div>
+            </div>
         </div>
 
     </div>
 
-    <div class="card">
-
-        <h2>Features</h2>
-
-        <div class="feature"><span>✓</span>Team Chat Rooms</div>
-        <div class="feature"><span>✓</span>Project Timelines</div>
-        <div class="feature"><span>✓</span>Task Management</div>
-        <div class="feature"><span>✓</span>Meeting Scheduling</div>
-        <div class="feature"><span>✓</span>AI Project Summaries</div>
-
-    </div>
-
 </div>
+
+<!-- Interactive Client-side Scripting -->
+<script>
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatMessages = document.getElementById('chatMessages');
+
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (text === '') return;
+
+        // Create message node
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'msg sent';
+        msgDiv.textContent = text;
+
+        // Append and scroll down
+        chatMessages.appendChild(msgDiv);
+        chatInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
 
 </body>
 </html>
