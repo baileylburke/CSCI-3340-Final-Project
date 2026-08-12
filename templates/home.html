@@ -71,6 +71,14 @@
             color:white;
         }
 
+        /* The logout control is a <button> in a POST form, so it needs the
+           browser's default button chrome cleared to match the .btn links. */
+        button.btn{
+            background:transparent;
+            font-family:inherit;
+            cursor:pointer;
+        }
+
         .btn:hover{
             transform:translateY(-4px);
         }
@@ -134,23 +142,26 @@
         <div class="buttons">
             {% if user.is_authenticated %}
 
-    <h2>Welcome, {{ user.username }}!</h2>
+    <h2>Welcome, {{ user.display_name|default:user.username }}!</h2>
 
-    <a href="/logout/" class="btn signup">
-        Logout
-    </a>
+    <form method="POST" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn signup">
+            Logout
+        </button>
+    </form>
 
     {% else %}
 
-    <a href="/login/" class="btn login">
+    <a href="{% url 'accounts:login' %}" class="btn login">
         Log In
     </a>
 
-    <a href="/register/" class="btn signup">
+    <a href="{% url 'accounts:register' %}" class="btn signup">
         Create Account
     </a>
 
-    {% endif %}  
+    {% endif %}
         </div>
 
     </div>

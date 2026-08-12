@@ -76,6 +76,24 @@
             transform:translateY(-2px);
         }
 
+        .error{
+            color:#ff8080;
+            text-align:left;
+            margin:-10px 0 18px;
+            font-size:14px;
+        }
+
+        .helptext{
+            display:block;
+            color:#cbd5e1;
+            font-size:13px;
+            margin:-10px 0 18px;
+        }
+
+        .helptext ul{
+            margin-left:18px;
+        }
+
         .bottom{
             text-align:center;
             margin-top:25px;
@@ -104,27 +122,23 @@
 
         {% csrf_token %}
 
-        <label>Display Name</label>
-        <input type="text" name="display_name" required>
+        {% for field in form %}
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% for message in field.errors %}
+                <p class="error">{{ message }}</p>
+            {% endfor %}
+            {% if field.help_text %}
+                <span class="helptext">{{ field.help_text|safe }}</span>
+            {% endif %}
+        {% endfor %}
 
-        <label>Username</label>
-        <input type="text" name="username" required>
-
-        <label>Email</label>
-        <input type="email" name="email" required>
-
-        <label>Password</label>
-        <input type="password" name="password" required>
-
-        <label>Confirm Password</label>
-        <input type="password" name="confirm_password" required>
+        {% for message in form.non_field_errors %}
+            <p class="error">{{ message }}</p>
+        {% endfor %}
 
         <button type="submit">Create Account</button>
-          {% if error %}
-          <p style="color:#ff8080; text-align:center; margin-bottom:20px;">
-    {{ error }}
-          </p>
-          {% endif %}
+
     </form>
 
     <div class="bottom">
