@@ -142,3 +142,44 @@ def find_people(request):
             "search": search,
         },
     )
+    
+     
+def friend_requests(request):
+
+    # Make sure the user is logged in.
+    if not request.user.is_authenticated:
+        return redirect("/login/")
+
+    # Get requests sent to the current user.
+    requests = FriendRequest.objects.filter(
+        to_user=request.user,
+        accepted=False,
+    )
+
+    # Show the friend requests page.
+    return render(
+        request,
+        "accounts/friend_requests.html",
+        {
+            "requests": requests,
+        },
+    )
+
+def accept_friend_request(request, request_id):
+
+    # Make sure the user is logged in.
+    if not request.user.is_authenticated:
+        return redirect("/login/")
+
+    # Find the friend request.
+    friend_request = FriendRequest.objects.get(
+        id=request_id,
+        to_user=request.user,
+    )
+
+    # Mark the request as accepted.
+    friend_request.accepted = True
+    friend_request.save()
+
+    # Return to friend requests.
+    return redirect("/friend-requests/")
