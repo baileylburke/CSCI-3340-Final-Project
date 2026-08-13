@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Calendar | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Calendar</h1>
+    <a href="/calendar/new/" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Add Event
+    </a>
+</div>
+
+<div class="dash-grid">
+
+    <div class="dash-main">
+        <div class="card">
+            {% include "schedule/_month_grid.html" with show_nav=True big=True %}
+        </div>
+
+        <div class="card">
+            <div class="pane-header">
+                <h3>Events in {{ calendar.month_name }}</h3>
+            </div>
+            {% for e in month_events %}
+                <div class="event-row">
+                    <span class="event-dot"></span>
+                    <div>
+                        <strong>{{ e.title }}</strong>
+                        {% if e.project %}
+                            <small class="muted">{{ e.project.name }}</small>
+                        {% endif %}
+                        <small class="muted">
+                            {{ e.starts_at|date:"D, M j, Y" }} - {{ e.starts_at|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty">No events this month.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <aside class="dash-side">
+        <div class="card">
+            <div class="pane-header"><h3>Upcoming</h3></div>
+            {% for e in upcoming_events %}
+                <div class="event-row">
+                    <span class="event-dot"></span>
+                    <div>
+                        <strong>{{ e.title }}</strong>
+                        <small class="muted">
+                            {{ e.starts_at|date:"M j" }} - {{ e.starts_at|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty">Nothing coming up.</p>
+            {% endfor %}
+        </div>
+    </aside>
+
+</div>
+
+{% endblock %}

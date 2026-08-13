@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Rooms | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Rooms</h1>
+    <a href="/chat/new/" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Create Room
+    </a>
+</div>
+
+<div class="card">
+    {% for room in rooms %}
+        <a class="room-item" href="/chat/{{ room.id }}/">
+            <span class="room-hash">#</span>
+            <div>
+                <strong>{{ room.name }}</strong>
+                <small class="muted">
+                    {% with last=room.messages.last %}
+                        {% if last %}
+                            {{ last.sender }}: {{ last.text|truncatechars:60 }}
+                        {% else %}
+                            {{ room.description|default:"No messages yet" }}
+                        {% endif %}
+                    {% endwith %}
+                </small>
+            </div>
+            <span class="room-count">
+                <i class="fa-solid fa-user-group"></i> {{ room.members.count }}
+            </span>
+        </a>
+    {% empty %}
+        <p class="empty">
+            No rooms yet. <a href="/chat/new/">Create the first one</a> for
+            your team.
+        </p>
+    {% endfor %}
+</div>
+
+{% endblock %}

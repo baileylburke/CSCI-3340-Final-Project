@@ -1,0 +1,112 @@
+{# Reusable chat panel. Expects: room, chat_messages. Optional: tall. #}
+
+<div class="chat-panel" id="chat-panel"
+     data-messages-url="/chat/{{ room.id }}/messages/"
+     data-send-url="/chat/{{ room.id }}/send/">
+
+    <div class="chat-scroll {% if tall %}tall{% endif %}" id="chat-scroll">
+        {% for m in chat_messages %}
+            <div class="msg {% if m.sender_id == user.id %}mine{% endif %}" data-id="{{ m.id }}">
+                <span class="avatar">{{ m.sender|stringformat:"s"|slice:":1"|upper }}</span>
+                <div class="msg-body">
+                    <div class="msg-meta">
+                        <strong>{{ m.sender }}</strong>
+                        <span>{{ m.created_at|time:"g:i A" }}</span>
+                    </div>
+                    <div class="msg-text">{{ m.text }}</div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="empty">No messages yet. Say hello!</p>
+        {% endfor %}
+    </div>
+
+    <!-- Sends with JavaScript below; still works as a plain form without it. -->
+    <form class="chat-form" id="chat-form" method="post" action="/chat/{{ room.id }}/send/">
+        {% csrf_token %}
+        <input type="text" name="text" autocomplete="off"
+               placeholder="Message {% if room.is_dm %}{{ room_title|default:'your friend' }}{% else %}#{{ room.name }}{% endif %}">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </form>
+
+</div>
+
+<script>
+    (function () {
+        var panel = document.getElementById("chat-panel");
+        var scroll = document.getElementById("chat-scroll");
+        var form = document.getElementById("chat-form");
+        var input = form.querySelector("input[name=text]");
+        var csrf = form.querySelector("input[name=csrfmiddlewaretoken]").value;
+
+        // Highest message id we've seen, so polling only asks for new ones.
+        var lastId = 0;
+        scroll.querySelectorAll(".msg[data-id]").forEach(function (m) {
+            lastId = Math.max(lastId, Number(m.dataset.id));
+        });
+        scroll.scrollTop = scroll.scrollHeight;
+
+        function esc(text) {
+            var div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function addMessage(m) {
+            // Don't add the same message twice.
+            if (scroll.querySelector('.msg[data-id="' + m.id + '"]')) return;
+
+            var empty = scroll.querySelector(".empty");
+            if (empty) empty.remove();
+
+            var div = document.createElement("div");
+            div.className = "msg" + (m.mine ? " mine" : "");
+            div.dataset.id = m.id;
+            div.innerHTML =
+                '<span class="avatar">' + esc(m.sender.charAt(0).toUpperCase()) + "</span>" +
+                '<div class="msg-body">' +
+                '<div class="msg-meta"><strong>' + esc(m.sender) + "</strong> " +
+                "<span>" + esc(m.time) + "</span></div>" +
+                '<div class="msg-text">' + esc(m.text) + "</div></div>";
+            scroll.appendChild(div);
+            lastId = Math.max(lastId, m.id);
+            scroll.scrollTop = scroll.scrollHeight;
+        }
+
+        // Poll for new messages every 3 seconds.
+        function poll() {
+            fetch(panel.dataset.messagesUrl + "?after=" + lastId, {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+                .then(function (r) { return r.ok ? r.json() : { messages: [] }; })
+                .then(function (data) { data.messages.forEach(addMessage); })
+                .catch(function () { /* offline; try again next tick */ });
+        }
+        setInterval(poll, 3000);
+
+        // Send without reloading the page.
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var text = input.value.trim();
+            if (!text) return;
+            input.value = "";
+
+            var body = new FormData();
+            body.append("text", text);
+            body.append("csrfmiddlewaretoken", csrf);
+
+            fetch(panel.dataset.sendUrl, {
+                method: "POST",
+                body: body,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                    if (data && data.ok) addMessage(data.message);
+                })
+                .catch(function () { /* dropped; user can resend */ });
+        });
+    })();
+</script>

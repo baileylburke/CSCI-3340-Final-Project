@@ -1,190 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}Friend Requests | TeamSpace{% endblock %}
 
-    <meta charset="UTF-8">
+{% block content %}
 
-    <!-- Makes the page responsive. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Friend Requests | Team Space</title>
-
-    <style>
-
-        /* Basic page setup. */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Blue website background. */
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a);
-            color: white;
-            padding: 40px;
-        }
-
-        /* Centers the content. */
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-
-        /* Page title. */
-        h1 {
-            margin-bottom: 10px;
-        }
-
-        /* Page description. */
-        .subtitle {
-            color: #cbd5e1;
-            margin-bottom: 30px;
-        }
-
-        /* Friend request card. */
-        .request-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding: 20px;
-            margin-bottom: 15px;
-
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-        }
-
-        /* User information. */
-        .user-info h3 {
-            margin-bottom: 5px;
-        }
-
-        .user-info p {
-            color: #cbd5e1;
-        }
-
-        /* Request buttons. */
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .accept-button,
-        .decline-button {
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Accept button. */
-        .accept-button {
-            border: none;
-            background: white;
-            color: #1e3a8a;
-        }
-
-        /* Decline button. */
-        .decline-button {
-            border: 2px solid white;
-            background: transparent;
-            color: white;
-        }
-
-        /* Button hover effects. */
-        .accept-button:hover {
-            opacity: 0.85;
-        }
-
-        .decline-button:hover {
-            background: white;
-            color: #1e3a8a;
-        }
-
-        /* Empty message. */
-        .empty {
-            color: #cbd5e1;
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-    <div class="container">
-
-        <!-- Page heading. -->
+<div class="page-header">
+    <div>
         <h1>Friend Requests</h1>
-
-        <!-- Page description. -->
-        <p class="subtitle">
-            People who want to connect with you.
-        </p>
-
-
-        <!-- Display each friend request. -->
-        {% for friend_request in requests %}
-
-            <div class="request-card">
-
-                <div class="user-info">
-
-                    <!-- Sender's display name. -->
-                    <h3>
-                        {{ friend_request.from_user.display_name|default:friend_request.from_user.username }}
-                    </h3>
-
-                    <!-- Sender's username. -->
-                    <p>
-                        @{{ friend_request.from_user.username }}
-                    </p>
-
-                </div>
-
-
-                <!-- These buttons will work in the next step. -->
-                <div class="actions">
-
-                      <!-- Accept the friend request. -->
-                      <form method="POST" action="{% url 'accounts:accept_friend_request' friend_request.id %}">
-
-                      <!-- Protects the form from CSRF attacks. -->
-                       {% csrf_token %}
-
-                       <!-- Accept button. -->
-                      <button type="submit" class="accept-button">
-                           Accept
-                      </button>
-
-    </form>
-
-
-                      <!-- Decline will be added next. -->
-                        <button class="decline-button">
-                           Decline
-                        </button>
-
+        <p class="muted">People who want to connect with you.</p>
+    </div>
 </div>
 
+<div class="card" style="max-width: 640px; margin-bottom: 16px;">
+    {% for friend_request in requests %}
+        <div class="person-row">
+            <span class="avatar">{{ friend_request.from_user|stringformat:"s"|slice:":1"|upper }}</span>
+            <div>
+                <strong>{{ friend_request.from_user }}</strong>
+                <small class="muted">@{{ friend_request.from_user.username }}</small>
             </div>
+            <span class="spacer"></span>
 
-        {% empty %}
+            <!-- Accept the friend request. -->
+            <form method="post"
+                  action="{% url 'accounts:accept_friend_request' friend_request.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">Accept</button>
+            </form>
 
-            <!-- Show this when there are no requests. -->
-            <p class="empty">
-                You don't have any friend requests.
-            </p>
+            <!-- Decline the friend request. -->
+            <form method="post"
+                  action="{% url 'accounts:decline_friend_request' friend_request.id %}"
+                  style="margin-left: 8px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger-outline btn-sm">Decline</button>
+            </form>
+        </div>
+    {% empty %}
+        <p class="empty">You don't have any friend requests.</p>
+    {% endfor %}
+</div>
 
+{% if sent %}
+    <div class="card" style="max-width: 640px;">
+        <div class="pane-header"><h3>Sent, waiting for a reply</h3></div>
+        {% for friend_request in sent %}
+            <div class="person-row">
+                <span class="avatar">{{ friend_request.to_user|stringformat:"s"|slice:":1"|upper }}</span>
+                <span>{{ friend_request.to_user }}</span>
+                <span class="spacer"></span>
+                <span class="pill pill-planning">Pending</span>
+            </div>
         {% endfor %}
-
     </div>
+{% endif %}
 
-</body>
-
-</html>
+{% endblock %}
