@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{% if room.is_dm %}{{ room_title }}{% else %}#{{ room.name }}{% endif %} | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>{% if room.is_dm %}{{ room_title }}{% else %}# {{ room.name }}{% endif %}</h1>
+        {% if room.description %}<p class="muted">{{ room.description }}</p>{% endif %}
+        {% if room.project %}
+            <p class="muted">
+                Linked to <a href="/projects/{{ room.project_id }}/">{{ room.project.name }}</a>
+            </p>
+        {% endif %}
+    </div>
+    <a class="btn btn-outline" href="{{ video_url }}" target="_blank" rel="noopener">
+        <i class="fa-solid fa-video"></i> Video Call
+    </a>
+</div>
+
+<div class="dash-grid">
+
+    <div class="dash-main">
+        <div class="card">
+            {% include "chat/_chat_panel.html" with tall=True %}
+        </div>
+    </div>
+
+    <aside class="dash-side">
+        <div class="card">
+            <div class="pane-header"><h3>Members</h3></div>
+            {% for member in members %}
+                <div class="person-row">
+                    <span class="avatar">{{ member|stringformat:"s"|slice:":1"|upper }}</span>
+                    <span>{{ member }}</span>
+                    <span class="spacer"></span>
+                    <span class="dot dot-{{ member.presence }}"></span>
+                </div>
+            {% endfor %}
+        </div>
+    </aside>
+
+</div>
+
+{% endblock %}

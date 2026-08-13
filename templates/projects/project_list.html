@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Projects | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Projects</h1>
+    <a href="/projects/new/" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> New Project
+    </a>
+</div>
+
+<div class="project-grid">
+    {% for p in projects %}
+        <a class="project-card" href="/projects/{{ p.id }}/">
+            <h4>{{ p.name }}</h4>
+            <span class="pill pill-{{ p.status }}">{{ p.get_status_display }}</span>
+            <div class="meta">
+                <span><i class="fa-solid fa-user-group"></i> {{ p.members.count }}</span>
+                {% if p.due_date %}<span>Due {{ p.due_date|date:"M j, Y" }}</span>{% endif %}
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: {{ p.progress }}%"></div>
+            </div>
+            <div class="progress-num">{{ p.progress }}%</div>
+        </a>
+    {% empty %}
+        <p class="empty">
+            You're not on any projects yet.
+            <a href="/projects/new/">Create your first one</a>.
+        </p>
+    {% endfor %}
+</div>
+
+{% endblock %}

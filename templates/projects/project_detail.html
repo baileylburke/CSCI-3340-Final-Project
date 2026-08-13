@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.name }} | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>{{ project.name }}</h1>
+        <p class="muted">
+            <span class="pill pill-{{ project.status }}">{{ project.get_status_display }}</span>
+            {% if project.due_date %} - Due {{ project.due_date|date:"M j, Y" }}{% endif %}
+            - {{ project.progress }}% complete
+        </p>
+    </div>
+</div>
+
+{% if project.description %}
+    <p class="muted" style="margin-bottom: 20px;">{{ project.description }}</p>
+{% endif %}
+
+<div class="dash-grid">
+
+    <!-- TASKS -->
+    <div class="dash-main">
+        <div class="card">
+            <div class="pane-header"><h3>Tasks</h3></div>
+
+            {% for task in tasks %}
+                <div class="task-row {% if task.done %}done{% endif %}">
+                    <!-- Tick the box to flip done / not done. -->
+                    <form method="post" action="/projects/tasks/{{ task.id }}/toggle/">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="/projects/{{ project.id }}/">
+                        <input type="checkbox" class="task-check"
+                               onchange="this.form.submit()"
+                               {% if task.done %}checked{% endif %}>
+                    </form>
+                    <span class="task-title">{{ task.title }}</span>
+                    <span class="spacer"></span>
+                    {% if task.assignee %}
+                        <span class="muted"><i class="fa-regular fa-user"></i> {{ task.assignee }}</span>
+                    {% endif %}
+                    {% if task.due_date %}
+                        <span class="muted">{{ task.due_date|date:"M j" }}</span>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="empty">No tasks yet. Add the first one below.</p>
+            {% endfor %}
+
+            <!-- ADD A TASK -->
+            <form method="post" action="/projects/{{ project.id }}/tasks/add/"
+                  class="chat-form" style="margin-top: 18px;">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="Add a task..." required>
+                <select name="assignee" class="task-assignee"
+                        style="max-width: 160px; border: 1px solid var(--border); border-radius: 10px; padding: 0 10px;">
+                    <option value="">Unassigned</option>
+                    {% for member in members %}
+                        <option value="{{ member.id }}">{{ member }}</option>
+                    {% endfor %}
+                </select>
+                <input type="date" name="due_date" style="max-width: 150px;">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MEMBERS + EVENTS -->
+    <aside class="dash-side">
+
+        <div class="card">
+            <div class="pane-header"><h3>Members</h3></div>
+            {% for member in members %}
+                <div class="person-row">
+                    <span class="avatar">{{ member|stringformat:"s"|slice:":1"|upper }}</span>
+                    <span>{{ member }}</span>
+                    <span class="spacer"></span>
+                    <span class="dot dot-{{ member.presence }}"></span>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="pane-header">
+                <h3>Events</h3>
+                <a class="link" href="/calendar/new/">+ Add</a>
+            </div>
+            {% for e in events %}
+                <div class="event-row">
+                    <span class="event-dot"></span>
+                    <div>
+                        <strong>{{ e.title }}</strong>
+                        <small class="muted">
+                            {{ e.starts_at|date:"M j, Y" }} - {{ e.starts_at|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty">No events for this project.</p>
+            {% endfor %}
+        </div>
+
+    </aside>
+
+</div>
+
+{% endblock %}

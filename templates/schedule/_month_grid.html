@@ -1,0 +1,30 @@
+{# Month grid. Expects: calendar (from build_month). Optional: show_nav, big. #}
+
+<div class="cal {% if big %}big{% endif %}">
+
+    <div class="cal-head">
+        <strong>{{ calendar.month_name }} {{ calendar.year }}</strong>
+        {% if show_nav %}
+            <span class="cal-nav">
+                <a href="?year={{ calendar.prev_year }}&month={{ calendar.prev_month }}">&lsaquo;</a>
+                <a href="?year={{ calendar.next_year }}&month={{ calendar.next_month }}">&rsaquo;</a>
+            </span>
+        {% endif %}
+    </div>
+
+    <div class="cal-grid cal-daynames">
+        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span>
+        <span>Th</span><span>Fr</span><span>Sa</span>
+    </div>
+
+    {% for week in calendar.weeks %}
+        <div class="cal-grid">
+            {% for d in week %}
+                <span class="cal-day{% if not d.in_month %} pad{% endif %}{% if d.is_today %} today{% endif %}{% if d.has_event %} has-event{% endif %}">
+                    {% if d.in_month %}{{ d.day }}{% else %}0{% endif %}
+                </span>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+</div>

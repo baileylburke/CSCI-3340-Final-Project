@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Create Room | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Create Room</h1>
+</div>
+
+<div class="card form-card">
+
+    {% if error %}<div class="error-box">{{ error }}</div>{% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="field">
+            <label for="id_name">Room name</label>
+            <input id="id_name" type="text" name="name" required
+                   placeholder="e.g. Development Team">
+        </div>
+
+        <div class="field">
+            <label for="id_description">Description</label>
+            <input id="id_description" type="text" name="description"
+                   placeholder="What is this room for?">
+        </div>
+
+        <div class="field">
+            <label for="id_project">Project (optional)</label>
+            <select id="id_project" name="project">
+                <option value="">No project</option>
+                {% for p in projects %}
+                    <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Add members (your friends)</label>
+            {% if friends %}
+                <div class="checkbox-list">
+                    {% for friend in friends %}
+                        <label>
+                            <input type="checkbox" name="members" value="{{ friend.id }}">
+                            {{ friend }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty">
+                    No friends yet. <a href="/people/">Add some</a> to chat
+                    with them here.
+                </p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Room</button>
+    </form>
+
+</div>
+
+{% endblock %}

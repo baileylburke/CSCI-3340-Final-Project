@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Notifications</h1>
+</div>
+
+<div class="card" style="max-width: 640px;">
+    {% for n in items %}
+        <div class="notif-row {% if not n.read %}unread{% endif %}">
+            <div>
+                {% if n.link %}
+                    <a href="{{ n.link }}">{{ n.text }}</a>
+                {% else %}
+                    {{ n.text }}
+                {% endif %}
+                <small class="muted">{{ n.created_at|timesince }} ago</small>
+            </div>
+            {% if not n.read %}<span class="unread-dot"></span>{% endif %}
+        </div>
+    {% empty %}
+        <p class="empty">No notifications yet.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

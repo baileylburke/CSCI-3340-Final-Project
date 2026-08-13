@@ -49,6 +49,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Records when each logged-in user was last active, for presence dots.
+    "apps.core.middleware.LastSeenMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -64,6 +66,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Supplies the sidebar's DM list and notification badge count.
+                "apps.core.context_processors.sidebar",
             ],
         },
     },
@@ -89,6 +93,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 

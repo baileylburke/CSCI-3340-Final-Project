@@ -19,18 +19,20 @@ urlpatterns = [
     # Opens the page where users can search for other people.
     path("people/", views.find_people, name="find_people"),
 
-    # Opens the page where users can search for other people.
-    path("people/", views.find_people, name="find_people"),
-
     # Shows incoming friend requests.
     path("friend-requests/", views.friend_requests, name="friend_requests"),
 
     # Accepts a friend request.
     path(
-         "friend-requests/<int:request_id>/accept/",
-         views.accept_friend_request,
-         name="accept_friend_request",
+        "friend-requests/<int:request_id>/accept/",
+        views.accept_friend_request,
+        name="accept_friend_request",
     ),
 
-    
+    # Declines a friend request.
+    path(
+        "friend-requests/<int:request_id>/decline/",
+        views.decline_friend_request,
+        name="decline_friend_request",
+    ),
 ]

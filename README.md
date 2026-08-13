@@ -30,7 +30,19 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Open http://127.0.0.1:8000/ — you should see "Project is running."
+Open http://127.0.0.1:8000/ and you should see the TeamSpace landing page.
+
+## Demo data
+
+To fill the app with example users, projects, rooms, tasks, and events
+(useful for demos and screenshots):
+
+```bash
+python manage.py seed_demo
+```
+
+Then log in as `jason`, `bailey`, `alfred`, `emma`, or `michael` with the
+password `demo1234`. Safe to run more than once.
 
 ## Running tests
 
@@ -42,19 +54,19 @@ python manage.py test
 
 ```
 config/           settings, root URLs, WSGI/ASGI entrypoints
-apps/accounts/    custom user model
-apps/core/        shared views, base templates
-apps/projects/    projects, membership, roles
-apps/chat/        rooms and messages
-apps/schedule/    calendar events and milestones
-apps/insights/    generated summaries, decisions, estimates
-static/           CSS, JS, images
-templates/        project-level templates
+apps/accounts/    custom user model, friends and friend requests
+apps/core/        dashboard, search, notifications, presence middleware
+apps/projects/    projects, membership, tasks
+apps/chat/        rooms, direct messages, polling chat
+apps/schedule/    calendar events
+apps/insights/    generated summaries, decisions, estimates (not started)
+static/           shared stylesheet (static/css/app.css)
+templates/        base layout, sidebar/topbar, and per-app pages
 ```
 
-The placeholder apps are empty on purpose. Add models.py, views.py, and
-urls.py to each as work begins, and register each new urls.py in
-config/urls.py.
+Pages extend `templates/base.html`, which provides the sidebar and topbar.
+Chat updates by polling `/chat/<id>/messages/` every few seconds, so no
+WebSockets are needed. Video calls open a Jitsi Meet room in a new tab.
 
 Apps have no apps.py; Django infers the config from the INSTALLED_APPS
 entry. Add one only if an app needs startup hooks such as signal registration.
@@ -62,6 +74,6 @@ entry. Add one only if an app needs startup hooks such as signal registration.
 ## Rules
 
 - Never commit .env or db.sqlite3.
-- Always commit migration files — teammates need them to build the database.
+- Always commit migration files. Teammates need them to build the database.
 - Re-run pip freeze > requirements.txt after installing a new package.
 - Do not change AUTH_USER_MODEL.

@@ -1,0 +1,30 @@
+<header class="topbar">
+
+    <!-- Search everything from anywhere. -->
+    <form class="topbar-search" action="/search/" method="get">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text"
+               name="q"
+               placeholder="Search rooms, projects, people..."
+               value="{{ request.GET.q|default:'' }}">
+    </form>
+
+    <div class="topbar-right">
+
+        <!-- Notification bell with unread badge. -->
+        <a class="icon-btn" href="/notifications/" title="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            {% if unread_notifications %}
+                <span class="badge">{{ unread_notifications }}</span>
+            {% endif %}
+        </a>
+
+        <!-- Current user. -->
+        <div class="topbar-user">
+            <span class="avatar">{{ user|stringformat:"s"|slice:":1"|upper }}</span>
+            <span>{{ user }}</span>
+        </div>
+
+    </div>
+
+</header>

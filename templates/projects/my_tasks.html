@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}My Tasks | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>My Tasks</h1>
+</div>
+
+<div class="card">
+    {% for task in tasks %}
+        <div class="task-row {% if task.done %}done{% endif %}">
+            <form method="post" action="/projects/tasks/{{ task.id }}/toggle/">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="/projects/tasks/">
+                <input type="checkbox" class="task-check"
+                       onchange="this.form.submit()"
+                       {% if task.done %}checked{% endif %}>
+            </form>
+            <span class="task-title">{{ task.title }}</span>
+            <span class="spacer"></span>
+            <a class="muted" href="/projects/{{ task.project_id }}/">{{ task.project.name }}</a>
+            {% if task.due_date %}
+                <span class="muted">Due {{ task.due_date|date:"M j, Y" }}</span>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p class="empty">
+            Nothing assigned to you right now. Check your
+            <a href="/projects/">projects</a> for open work.
+        </p>
+    {% endfor %}
+</div>
+
+{% endblock %}

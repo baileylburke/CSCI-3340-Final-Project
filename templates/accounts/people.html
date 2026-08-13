@@ -1,221 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}People | TeamSpace{% endblock %}
 
-    <meta charset="UTF-8">
+{% block content %}
 
-    <!-- Makes the page responsive. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Find People | Team Space</title>
-
-    <style>
-
-        /* Basic page setup. */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Blue website background. */
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a);
-            color: white;
-            padding: 40px;
-        }
-
-        /* Centers the page content. */
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-
-        /* Page title. */
-        h1 {
-            margin-bottom: 10px;
-        }
-
-        /* Page description. */
-        .subtitle {
-            color: #cbd5e1;
-            margin-bottom: 30px;
-        }
-
-        /* Search bar layout. */
-        .search-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        /* Search input. */
-        .search-box input {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        /* Search button. */
-        .search-box button {
-            padding: 14px 25px;
-            border: none;
-            border-radius: 10px;
-            background: white;
-            color: #1e3a8a;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* User result card. */
-        .user-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding: 20px;
-            margin-bottom: 15px;
-
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-        }
-
-        /* User information. */
-        .user-info h3 {
-            margin-bottom: 5px;
-        }
-
-        .user-info p {
-            color: #cbd5e1;
-        }
-
-        /* Add friend button. */
-        .add-button {
-            padding: 10px 18px;
-            border: 2px solid white;
-            border-radius: 10px;
-            background: transparent;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Button hover effect. */
-        .add-button:hover {
-            background: white;
-            color: #1e3a8a;
-        }
-
-        /* No results message. */
-        .empty {
-            color: #cbd5e1;
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-    <div class="container">
-
-        <!-- Page heading. -->
-        <h1>Find People</h1>
-
-        <!-- Page description. -->
-        <p class="subtitle">
-            Search for teammates and friends.
-        </p>
-
-
-        <!-- User search form. -->
-        <form method="GET" class="search-box">
-
-            <!-- Search input. -->
-            <input
-                type="text"
-                name="search"
-                placeholder="Search by username..."
-                value="{{ search }}"
-            >
-
-            <!-- Submit search. -->
-            <button type="submit">
-                Search
-            </button>
-
-        </form>
-
-
-        <!-- Display each user found. -->
-        {% for person in users %}
-
-            <div class="user-card">
-
-                <div class="user-info">
-
-                    <!-- Display name. -->
-                    <h3>
-                        {{ person.display_name|default:person.username }}
-                    </h3>
-
-                    <!-- Username. -->
-                    <p>
-                        @{{ person.username }}
-                    </p>
-
-                </div>
-
-
-                <!-- Friend request form. -->
-                <form method="POST">
-
-                    <!-- Protects the form from CSRF attacks. -->
-                    {% csrf_token %}
-
-                    <!-- Sends the selected user's ID to the view. -->
-                    <input
-                        type="hidden"
-                        name="user_id"
-                        value="{{ person.id }}"
-                    >
-
-                    <!-- Sends the friend request. -->
-                    <button type="submit" class="add-button">
-                        Add Friend
-                    </button>
-
-                </form>
-
-            </div>
-
-        {% empty %}
-
-            <!-- Message when no users are found. -->
-            {% if search %}
-
-                <p class="empty">
-                    No users found for "{{ search }}".
-                </p>
-
-            {% else %}
-
-                <p class="empty">
-                    Search for someone to add them.
-                </p>
-
-            {% endif %}
-
-        {% endfor %}
-
+<div class="page-header">
+    <div>
+        <h1>People</h1>
+        <p class="muted">Search for teammates and manage your friends.</p>
     </div>
+    <a class="btn btn-outline" href="/friend-requests/">
+        <i class="fa-regular fa-envelope"></i> Friend Requests
+    </a>
+</div>
 
-</body>
+<!-- SEARCH -->
+<div class="card" style="margin-bottom: 16px;">
+    <form method="get" class="chat-form" style="margin-top: 0;">
+        <input type="text" name="search" placeholder="Search by name or username..."
+               value="{{ search }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 
-</html>
+    {% if search %}
+        <div style="margin-top: 14px;">
+            {% for result in results %}
+                <div class="person-row">
+                    <span class="avatar">{{ result.person|stringformat:"s"|slice:":1"|upper }}</span>
+                    <div>
+                        <strong>{{ result.person }}</strong>
+                        <small class="muted">@{{ result.person.username }}</small>
+                    </div>
+                    <span class="spacer"></span>
+
+                    {% if result.status == "none" %}
+                        <!-- Send a friend request. -->
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ result.person.id }}">
+                            <input type="hidden" name="search" value="{{ search }}">
+                            <button type="submit" class="btn btn-outline btn-sm">
+                                <i class="fa-solid fa-user-plus"></i> Add Friend
+                            </button>
+                        </form>
+                    {% elif result.status == "sent" %}
+                        <span class="pill pill-planning">Request sent</span>
+                    {% elif result.status == "received" %}
+                        <a class="btn btn-outline btn-sm" href="/friend-requests/">
+                            Respond to request
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary btn-sm"
+                           href="/chat/dm/{{ result.person.id }}/">
+                            <i class="fa-regular fa-comment"></i> Message
+                        </a>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="empty">No users found for "{{ search }}".</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- FRIENDS -->
+<div class="card">
+    <div class="pane-header"><h3>Your Friends</h3></div>
+    {% for friend in friends %}
+        <div class="person-row">
+            <span class="avatar">{{ friend|stringformat:"s"|slice:":1"|upper }}</span>
+            <div>
+                <strong>{{ friend }}</strong>
+                <small class="muted">@{{ friend.username }}</small>
+            </div>
+            <span class="dot dot-{{ friend.presence }}"></span>
+            <span class="spacer"></span>
+            <a class="btn btn-outline btn-sm" href="/chat/dm/{{ friend.id }}/">
+                <i class="fa-regular fa-comment"></i> Message
+            </a>
+        </div>
+    {% empty %}
+        <p class="empty">No friends yet. Search above to find your teammates.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

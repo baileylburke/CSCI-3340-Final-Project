@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}New Project | TeamSpace{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>New Project</h1>
+</div>
+
+<div class="card form-card">
+
+    {% if error %}<div class="error-box">{{ error }}</div>{% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="field">
+            <label for="id_name">Project name</label>
+            <input id="id_name" type="text" name="name" required>
+        </div>
+
+        <div class="field">
+            <label for="id_description">Description</label>
+            <textarea id="id_description" name="description"
+                      placeholder="What is this project about?"></textarea>
+        </div>
+
+        <div class="field-row">
+            <div class="field">
+                <label for="id_status">Status</label>
+                <select id="id_status" name="status">
+                    <option value="planning">Planning</option>
+                    <option value="in_progress">In Progress</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="id_due_date">Due date</label>
+                <input id="id_due_date" type="date" name="due_date">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Add teammates (your friends)</label>
+            {% if friends %}
+                <div class="checkbox-list">
+                    {% for friend in friends %}
+                        <label>
+                            <input type="checkbox" name="members" value="{{ friend.id }}">
+                            {{ friend }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty">
+                    No friends yet. <a href="/people/">Add some</a> so you
+                    can bring them onto projects.
+                </p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Project</button>
+    </form>
+
+</div>
+
+{% endblock %}

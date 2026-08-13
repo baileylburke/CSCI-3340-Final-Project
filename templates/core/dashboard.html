@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Home | TeamSpace{% endblock %}
+
+{% block content %}
+
+<!-- WELCOME -->
+<div class="welcome">
+    <h1>Welcome back, {{ user.display_name|default:user.username }}! 👋</h1>
+    <p class="muted">Here's what's happening with your teams today.</p>
+</div>
+
+<!-- STAT TILES -->
+<div class="stat-grid">
+
+    <div class="card stat">
+        <div class="tile-icon"><i class="fa-regular fa-folder"></i></div>
+        <div>
+            <div class="stat-number">{{ stats.active_projects }}</div>
+            <div class="stat-label">Active Projects</div>
+            <a class="link" href="/projects/">View all projects</a>
+        </div>
+    </div>
+
+    <div class="card stat">
+        <div class="tile-icon"><i class="fa-solid fa-user-group"></i></div>
+        <div>
+            <div class="stat-number">{{ stats.teammates }}</div>
+            <div class="stat-label">Team Members</div>
+            <a class="link" href="/people/">View all people</a>
+        </div>
+    </div>
+
+    <div class="card stat">
+        <div class="tile-icon"><i class="fa-regular fa-circle-check"></i></div>
+        <div>
+            <div class="stat-number">{{ stats.tasks_due_soon }}</div>
+            <div class="stat-label">Tasks Due Soon</div>
+            <a class="link" href="/projects/tasks/">View my tasks</a>
+        </div>
+    </div>
+
+    <div class="card stat">
+        <div class="tile-icon"><i class="fa-regular fa-calendar"></i></div>
+        <div>
+            <div class="stat-number">{{ stats.events_today }}</div>
+            <div class="stat-label">Events Today</div>
+            <a class="link" href="/calendar/">View calendar</a>
+        </div>
+    </div>
+
+</div>
+
+<div class="dash-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="dash-main">
+
+        <!-- ROOMS + CHAT -->
+        <div class="card rooms-chat">
+
+            <div class="rooms-pane">
+                <div class="pane-header">
+                    <h3>Your Rooms</h3>
+                    <a href="/chat/new/" class="btn btn-outline btn-sm">+ Create</a>
+                </div>
+                {% for room in rooms %}
+                    <a class="room-item {% if active_room and room.id == active_room.id %}active{% endif %}"
+                       href="/?room={{ room.id }}">
+                        <span class="room-hash">#</span>
+                        <div>
+                            <strong>{{ room.name }}</strong>
+                            <small class="muted">{{ room.description|truncatechars:28 }}</small>
+                        </div>
+                        <span class="room-count">
+                            <i class="fa-solid fa-user-group"></i> {{ room.members.count }}
+                        </span>
+                    </a>
+                {% empty %}
+                    <p class="empty">No rooms yet. <a href="/chat/new/">Create one</a>.</p>
+                {% endfor %}
+            </div>
+
+            <div class="chat-pane">
+                {% if active_room %}
+                    <div class="pane-header chat-head">
+                        <div>
+                            <h3># {{ active_room.name }}</h3>
+                            <small class="muted">{{ active_room.description }}</small>
+                        </div>
+                        <div class="chat-tools">
+                            <span class="muted">
+                                <i class="fa-solid fa-user-group"></i> {{ active_room.members.count }}
+                            </span>
+                            <a class="icon-btn" target="_blank" rel="noopener"
+                               href="https://meet.jit.si/TeamSpace-room-{{ active_room.id }}"
+                               title="Start video call">
+                                <i class="fa-solid fa-video"></i>
+                            </a>
+                            <a class="icon-btn" href="/chat/{{ active_room.id }}/" title="Open room page">
+                                <i class="fa-solid fa-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% include "chat/_chat_panel.html" with room=active_room %}
+                {% else %}
+                    <p class="empty">Create a room to start chatting with your team.</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- RECENT PROJECTS -->
+        <div class="card">
+            <div class="pane-header">
+                <h3>Recent Projects</h3>
+                <a class="link" href="/projects/">View all projects</a>
+            </div>
+            <div class="project-grid">
+                {% for p in recent_projects %}
+                    <a class="project-card" href="/projects/{{ p.id }}/">
+                        <h4>{{ p.name }}</h4>
+                        <span class="pill pill-{{ p.status }}">{{ p.get_status_display }}</span>
+                        <div class="meta">
+                            <span><i class="fa-solid fa-user-group"></i> {{ p.members.count }}</span>
+                            {% if p.due_date %}<span>Due {{ p.due_date|date:"M j, Y" }}</span>{% endif %}
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: {{ p.progress }}%"></div>
+                        </div>
+                        <div class="progress-num">{{ p.progress }}%</div>
+                    </a>
+                {% endfor %}
+                <a class="project-card new" href="/projects/new/">+ New Project</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <aside class="dash-side">
+
+        <!-- CALENDAR -->
+        <div class="card">
+            <div class="pane-header">
+                <h3>Calendar</h3>
+                <a class="link" href="/calendar/">View full calendar</a>
+            </div>
+
+            {% include "schedule/_month_grid.html" %}
+
+            <h4 class="sub-heading">Upcoming Events</h4>
+            {% for e in upcoming_events %}
+                <div class="event-row">
+                    <span class="event-dot"></span>
+                    <div>
+                        <strong>{{ e.title }}</strong>
+                        <small class="muted">
+                            {{ e.starts_at|date:"M j, Y" }} - {{ e.starts_at|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty">Nothing scheduled yet.</p>
+            {% endfor %}
+
+            <a class="link" href="/calendar/new/">+ Add Event</a>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="card">
+            <div class="pane-header">
+                <h3>Notifications</h3>
+                <a class="link" href="/notifications/">View all</a>
+            </div>
+            {% for n in recent_notifications %}
+                <div class="notif-row {% if not n.read %}unread{% endif %}">
+                    <div>
+                        {% if n.link %}<a href="{{ n.link }}">{{ n.text }}</a>{% else %}{{ n.text }}{% endif %}
+                        <small class="muted">{{ n.created_at|timesince }} ago</small>
+                    </div>
+                    {% if not n.read %}<span class="unread-dot"></span>{% endif %}
+                </div>
+            {% empty %}
+                <p class="empty">You're all caught up.</p>
+            {% endfor %}
+        </div>
+
+    </aside>
+
+</div>
+
+{% endblock %}
